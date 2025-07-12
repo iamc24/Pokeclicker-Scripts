@@ -5,7 +5,7 @@
 // @description   Edit your save for debug (currency, gems, pokeballs, pokemons, ...)
 // @copyright     https://github.com/Ephenia
 // @license       GPL-3.0 License
-// @version       1.0.3
+// @version       1.0.4
 
 // @homepageURL   https://github.com/Ephenia/Pokeclicker-Scripts/
 // @supportURL    https://github.com/Ephenia/Pokeclicker-Scripts/issues
@@ -67,7 +67,7 @@ function filterPkdx(){
                 case 'all':
                     break;
                 default:
-                    display = tdb.innerHTML.toLowerCase().includes(document.getElementById('pkdxRegionFilter').value);
+                    display = tdb.innerHTML.toLowerCase().substring(0,92).includes(document.getElementById('pkdxRegionFilter').value);
                     break;
             }
         }
@@ -142,7 +142,7 @@ function loadPkdx(){
             let lpkm = App.game.party.getPokemon(pokemon.id);
             let region = GameConstants.Region[pokemon.nativeRegion].charAt(0).toUpperCase() + GameConstants.Region[pokemon.nativeRegion].slice(1)
             let hint = "";
-            let getPokemonLocation = PokemonHelper.getPokemonLocations(pokemon.name, playerRegion);
+            let getPokemonLocation = PokemonLocations.getPokemonLocations(pokemon.name, playerRegion);
             let roadLocations = getPokemonLocation[0]
             if (roadLocations) {
                 for (let i = 0; i <= playerRegion; i++) {
@@ -435,10 +435,46 @@ function initSaveEditor() {
     }
 
     // heldItems
-    HeldItem.getSortedHeldItems().forEach((itm, idx) => {
+    HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
-            <div class="btn btn-primary col-2 item-bag-item" onclick="HeldItem.getSortedHeldItems()[${idx}].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0))">
+            <div class="btn btn-primary col-2 item-bag-item" onclick="HeldItem.getSortedHeldItems().attack.items[${idx}].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0))">
+                <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    });
+    HeldItem.getSortedHeldItems().typeRestricted.items.forEach((itm, idx) => {
+        const itmPretty = itm.name.replaceAll('_', ' ');
+        modalBody.querySelector('#heldItems').innerHTML += `
+            <div class="btn btn-primary col-2 item-bag-item" onclick="HeldItem.getSortedHeldItems().typeRestricted.items[${idx}].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0))">
+                <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    });
+    HeldItem.getSortedHeldItems().ev.items.forEach((itm, idx) => {
+        const itmPretty = itm.name.replaceAll('_', ' ');
+        modalBody.querySelector('#heldItems').innerHTML += `
+            <div class="btn btn-primary col-2 item-bag-item" onclick="HeldItem.getSortedHeldItems().ev.items[${idx}].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0))">
+                <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    });
+    HeldItem.getSortedHeldItems().exp.items.forEach((itm, idx) => {
+        const itmPretty = itm.name.replaceAll('_', ' ');
+        modalBody.querySelector('#heldItems').innerHTML += `
+            <div class="btn btn-primary col-2 item-bag-item" onclick="HeldItem.getSortedHeldItems().exp.items[${idx}].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0))">
+                <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    });
+    HeldItem.getSortedHeldItems().other.items.forEach((itm, idx) => {
+        const itmPretty = itm.name.replaceAll('_', ' ');
+        modalBody.querySelector('#heldItems').innerHTML += `
+            <div class="btn btn-primary col-2 item-bag-item" onclick="HeldItem.getSortedHeldItems().other.items[${idx}].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0))">
                 <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -451,6 +487,7 @@ function initSaveEditor() {
         const reg = GameConstants.Region[i]
         pkdxRegFilt.innerHTML += `<option value="${reg}">${reg.charAt(0).toUpperCase() + reg.slice(1)}</option>`;
     }
+    pkdxRegFilt.innerHTML += '<option value="none" selected="true">None</option>';
 }
 
 /* WIP, sevii helper
