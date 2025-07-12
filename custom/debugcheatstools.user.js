@@ -67,7 +67,7 @@ function filterPkdx(){
                 case 'all':
                     break;
                 default:
-                    display = tdb.innerHTML.toLowerCase().substring(0,92).includes(document.getElementById('pkdxRegionFilter').value);
+                    display = tdb.innerHTML.match(/<td>.*<\/td>/g)[1].toLowerCase().includes(document.getElementById('pkdxRegionFilter').value);
                     break;
             }
         }
