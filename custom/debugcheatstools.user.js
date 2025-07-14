@@ -59,7 +59,7 @@ function filterPkdx(){
         let display = true;
 
         if (document.getElementById('pkdxNameFilter').value !== ""){
-            display = tdb.innerHTML.includes(document.getElementById('pkdxNameFilter').value);
+            display = tdb.innerHTML.match(/<td>.*<\/td>/g)[3].toLowerCase().includes(document.getElementById('pkdxNameFilter').value.toLowerCase());
         }
 
         if (display === true) {
@@ -487,7 +487,7 @@ function initSaveEditor() {
         const reg = GameConstants.Region[i]
         pkdxRegFilt.innerHTML += `<option value="${reg}">${reg.charAt(0).toUpperCase() + reg.slice(1)}</option>`;
     }
-    pkdxRegFilt.innerHTML += '<option value="none" selected="true">None</option>';
+    pkdxRegFilt.innerHTML += '<option value="none">None</option>';
 }
 
 /* WIP, sevii helper
