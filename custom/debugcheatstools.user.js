@@ -52,6 +52,14 @@ function gainPkrs(id){
     document.querySelectorAll(`:scope #pkdx_${id.toString().replace('.','_')} img`)[2].src = getPokerusImgSrc(id, lpkm);
 }
 
+function gainCurrency(currency) {
+    if (parseInt(document.getElementById("inputAddCurrency").value || 0) >= 0) {
+        App.game.wallet.addAmount(new Amount(parseInt(document.getElementById("inputAddCurrency").value || 0),currency),true)
+    } else if (parseInt(document.getElementById("inputAddCurrency").value || 0) < 0) {
+        App.game.wallet.loseAmount(new Amount(Math.abs(parseInt(document.getElementById("inputAddCurrency").value || 0)),currency))
+    }
+}
+
 function filterPkdx(){
     let lst = document.querySelectorAll(':scope #pkdx tbody tr');
     for (let i = 0; i < lst.length; i++) {
@@ -255,7 +263,7 @@ function initSaveEditor() {
                     </ul>
                     <div class="tab-content">
                         <div id="currency" class="tab-pane p-3 active">
-                            <p>Click on button to add money (input * achievement bonus)</p>
+                            <p>Click on button to add money (input)</p>
                             <input id="inputAddCurrency" class="form-control" type="number" placeholder="1000000" value="1000000" min="0">
                         </div>
                         <div id="gems" class="tab-pane p-3">
@@ -371,7 +379,7 @@ function initSaveEditor() {
         const itm = GameConstants.Currency[i];
         const itmPretty = itm.charAt(0).toUpperCase() + itm.replace(/[A-Z]/g, ' $&').trim().slice(1);
         modalBody.querySelector('#currency').innerHTML += `
-            <div class="btn btn-primary col-2 item-bag-item" onclick="App.game.wallet.gain${itm.charAt(0).toUpperCase() + itm.slice(1)}${i > 0 ? "s" : ""}(parseInt(document.getElementById('inputAddCurrency').value || 0))">
+            <div class="btn btn-primary col-2 item-bag-item" onclick="gainCurrency(${i})">
                 <img title="${itmPretty}" src="assets/images/currency/${itm}.svg" height="25px">
                 <div>${itmPretty}</div>
             </div>
