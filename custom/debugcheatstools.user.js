@@ -154,7 +154,7 @@ function loadPkdx(){
     pkdxBody.innerHTML = '';
     let toAdd = "";
     for (const pokemon of pokemonList) {
-        if (pokemon.nativeRegion <= playerRegion) {
+        if ((pokemon.nativeRegion <= playerRegion && pokemon.nativeRegion > -1) || (pokemon.nativeRegion == -1 && playerRegion >= GameConstants.Region.alola) || pokemon.id == 0) {
             let lpkm = App.game.party.getPokemon(pokemon.id);
             let region = GameConstants.Region[pokemon.nativeRegion].charAt(0).toUpperCase() + GameConstants.Region[pokemon.nativeRegion].slice(1)
             let hint = "";
