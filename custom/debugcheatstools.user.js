@@ -53,10 +53,18 @@ function gainPkrs(id){
 }
 
 function gainCurrency(currency) {
-    if (parseInt(document.getElementById("inputAddCurrency").value || 0) >= 0) {
-        App.game.wallet.addAmount(new Amount(parseInt(document.getElementById("inputAddCurrency").value || 0),currency),true)
-    } else if (parseInt(document.getElementById("inputAddCurrency").value || 0) < 0) {
-        App.game.wallet.loseAmount(new Amount(Math.abs(parseInt(document.getElementById("inputAddCurrency").value || 0)),currency))
+    let changeAmount = parseInt(document.getElementById("inputAddCurrency").value || 0);
+    if (changeAmount > 0) {
+        App.game.wallet.addAmount(new Amount(changeAmount,currency),true);
+    } else if (changeAmount < 0) {
+        changeAmount = Math.abs(changeAmount);
+        if (changeAmount > App.game.wallet.currencies[currency]()) {
+            changeAmount = App.game.wallet.currencies[currency]();
+            if (changeAmount == 0) {
+                return;
+            }
+        }
+        App.game.wallet.loseAmount(new Amount(changeAmount,currency));
     }
 }
 
