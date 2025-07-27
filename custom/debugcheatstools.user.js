@@ -236,6 +236,7 @@ function loadQuestLines() {
 }
 
 function loadEventHandlers() {
+
     // currency
     for (let i = 0; i < Object.keys(GameConstants.Currency).filter(isNaN).length; i++) {
         document.getElementById("currency_" + i).addEventListener("click", gainCurrency);
@@ -269,13 +270,6 @@ function loadEventHandlers() {
         });
     }
 
-    // vitamins
-    for (let i = 0; i < Object.keys(GameConstants.VitaminType).filter(isNaN).length; i++) {
-        document.getElementById("vitamins_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("vitamin")].name, parseInt(document.getElementById('inputAddVitamins').value || 0), true);
-        });
-    }
-
     // heldItems
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         document.getElementById("attackhelditems_" + idx).addEventListener("click", function () {
@@ -303,6 +297,49 @@ function loadEventHandlers() {
         });
     });
 
+    // underground items
+    for (let i = 0; i < Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem').filter(isNaN).length; i++) {
+        document.getElementById("undergrounditem_" + i).addEventListener("click", function () {
+            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddUndergroundItems').value || 0), true);
+        });
+    }
+
+    // miscellaneous items
+    // vitamins
+    for (let i = 0; i < Object.keys(GameConstants.VitaminType).filter(isNaN).length; i++) {
+        document.getElementById("vitamins_" + i).addEventListener("click", function () {
+            player.gainItem(ItemList[this.getAttribute("vitamin")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+        });
+    }
+    // consumables
+    for (let i = 0; i < Object.keys(GameConstants.ConsumableType).filter(isNaN).length; i++) {
+        document.getElementById("consumableitems_" + i).addEventListener("click", function () {
+            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+        });
+    }
+    // battle items
+    for (let i = 0; i < Object.keys(GameConstants.BattleItemType).filter(isNaN).length; i++) {
+        document.getElementById("battleitems_" + i).addEventListener("click", function () {
+            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+        });
+    }
+    // dream orbs
+    for (let i = 0; i < App.game.dreamOrbController.orbs.filter(isNaN).length; i++) {
+        document.getElementById("orbs_" + i).addEventListener("click", function () {
+            GameHelper.incrementObservable(App.game.dreamOrbController.orbs[i].amount, parseInt(document.getElementById('inputAddMiscItems').value || 0));
+        });
+    }
+    // eggs
+    for (let i = 0; i < Object.keys(GameConstants.EggItemType).filter(isNaN).length; i++) {
+        document.getElementById("eggs_" + i).addEventListener("click", function () {
+            player.gainItem(ItemList[this.getAttribute("egg")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+        });
+    }
+    // wishing piece
+    document.getElementById("wishingpiece").addEventListener("click", function () {
+        player.gainItem("Wishing_Piece", parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+    });
+
     // pokedex
     document.getElementById("pokedex").children[1].addEventListener("click", loadPkdx);
     document.getElementById("pkdxNameFilter").addEventListener("input", filterPkdx);
@@ -316,7 +353,6 @@ function loadEventHandlers() {
             pkElement.children[5].addEventListener("click", gainPkrs);
         }
     }
-    
     // questline
     document.getElementById("questlines").children[1].addEventListener("click", loadQuestLines);
     document.getElementById("questLineFilter").addEventListener("change", filterQuestLine);
@@ -353,8 +389,9 @@ function initSaveEditor() {
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#pokeballs">Pokeballs</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#berries">Berries</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#evolutionitems">Evolution Items</a></li>
-                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#vitamins">Vitamins</a></li>
-                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#heldItems">Held items</a></li>
+                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#heldItems">Held Items</a></li>
+                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#undergroundItems">Underground Items</a></li>
+                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#miscItems">Miscellaneous Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#pokedex">Pokedex</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#questlines">Quests</a></li>
                     </ul>
@@ -379,13 +416,17 @@ function initSaveEditor() {
                             <p>On click add evolution items (input)</p>
                             <input id="inputAddEvolutionItems" class="form-control" type="number" placeholder="100" value="100" min="0">
                         </div>
-                        <div id="vitamins" class="tab-pane p-3">
-                            <p>On click add vitamins (input)</p>
-                            <input id="inputAddVitamins" class="form-control" type="number" placeholder="100" value="100" min="0">
-                        </div>
                         <div id="heldItems" class="tab-pane p-3">
                             <p>On click add held items (input)</p>
                             <input id="inputAddHeldItems" class="form-control" type="number" placeholder="100" value="100" min="0">
+                        </div>
+                        <div id="undergroundItems" class="tab-pane p-3">
+                            <p>On click add underground items (input)</p>
+                            <input id="inputAddUndergroundItems" class="form-control" type="number" placeholder="100" value="100" min="0">
+                        </div>
+                        <div id="miscItems" class="tab-pane p-3">
+                            <p>On click add held items (input)</p>
+                            <input id="inputAddMiscItems" class="form-control" type="number" placeholder="100" value="100" min="0">
                         </div>
                         <div id="pokedex" class="tab-pane p-3">
                             <p><b>You can break your game, please backup!</b></br><i>Do not complete pokedex from another region if you are not in the region you will not be able to go to the next region!</i></p>
@@ -528,17 +569,6 @@ function initSaveEditor() {
         `;
     }
 
-    // vitamins
-    for (let i = 0; i < Object.keys(GameConstants.VitaminType).filter(isNaN).length; i++) {
-        const itm = GameConstants.VitaminType[i];
-        modalBody.querySelector('#vitamins').innerHTML += `
-            <div id="vitamins_${i}" class="btn btn-primary col-2 item-bag-item" vitamin="${itm}">
-                <img title="${itm}" src="assets/images/items/vitamin/${itm}.png" height="25px">
-                <div>${itm}</div>
-            </div>
-        `;
-    }
-
     // heldItems
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
@@ -585,6 +615,87 @@ function initSaveEditor() {
             </div>
         `;
     });
+
+    // underground items
+    for (let i = 0; i < Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem').filter(isNaN).length; i++) {
+        const itm = Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem')[i].name;
+        const itmPretty = itm.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+      });
+      const path = itmPretty.slice(-6) == "Fossil" || itmPretty == "Old Amber" ? 'breeding/'+itmPretty : 'items/underground/'+itmPretty;
+        modalBody.querySelector('#undergroundItems').innerHTML += `
+            <div id="undergrounditem_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
+                <img title="${itmPretty}" src="assets/images/${path}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    }
+
+    // miscellaneous items
+    // vitamins
+    for (let i = 0; i < Object.keys(GameConstants.VitaminType).filter(isNaN).length; i++) {
+        const itm = GameConstants.VitaminType[i];
+        modalBody.querySelector('#miscItems').innerHTML += `
+            <div id="vitamins_${i}" class="btn btn-primary col-2 item-bag-item" vitamin="${itm}">
+                <img title="${itm}" src="assets/images/items/vitamin/${itm}.png" height="25px">
+                <div>${itm}</div>
+            </div>
+        `;
+    }
+    // consumables
+    for (let i = 0; i < Object.keys(GameConstants.ConsumableType).filter(isNaN).length; i++) {
+        const itm = GameConstants.ConsumableType[i];
+        const itmPretty = itm.replaceAll('_', ' ');
+        modalBody.querySelector('#miscItems').innerHTML += `
+            <div id="consumableitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
+                <img title="${itmPretty}" src="assets/images/items/consumable/${itm}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    }
+    // battle items
+    for (let i = 0; i < Object.keys(GameConstants.BattleItemType).filter(isNaN).length; i++) {
+        const itm = Object.keys(GameConstants.BattleItemType)[i];
+        const itmPretty = i > 1 ? itm.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+      }) : itm;
+        modalBody.querySelector('#miscItems').innerHTML += `
+            <div id="battleitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
+                <img title="${itmPretty}" src="assets/images/items/battleItem/${itm}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    }
+    // dream orbs
+    for (let i = 0; i < App.game.dreamOrbController.orbs.filter(isNaN).length; i++) {
+        const itm = App.game.dreamOrbController.orbs[i].color;
+        modalBody.querySelector('#miscItems').innerHTML += `
+            <div id="orbs_${i}" class="btn btn-primary col-2 item-bag-item">
+                <img title="${itm} Orb" src="assets/images/dreamOrbs/dream_orb_${itm.toLowerCase()}.png" height="25px">
+                <div>${itm} Orb</div>
+            </div>
+        `;
+    }
+    // eggs
+    for (let i = 0; i < Object.keys(GameConstants.EggItemType).filter(isNaN).length; i++) {
+        const itm = GameConstants.EggItemType[i];
+        const itmPretty = itm.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+      });
+        modalBody.querySelector('#miscItems').innerHTML += `
+            <div id="eggs_${i}" class="btn btn-primary col-2 item-bag-item" egg="${itm}">
+                <img title="${itmPretty}" src="assets/images/items/egg/${itm}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    }
+    // wishing piece
+    modalBody.querySelector('#miscItems').innerHTML += `
+        <div id="wishingpiece" class="btn btn-primary col-2 item-bag-item">
+            <img title="Wishing Piece" src="assets/images/items/quest/Wishing_Piece.png" height="25px">
+            <div>Wishing Piece</div>
+        </div>
+    `;
 
     // pokedex
     const pkdxRegFilt = modalBody.querySelector('#pkdxRegionFilter');
