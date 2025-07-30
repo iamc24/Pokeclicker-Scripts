@@ -567,7 +567,7 @@ function initSaveEditor() {
         return char.toUpperCase();
       });
         modalBody.querySelector('#evolutionItems').innerHTML += `
-            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
+            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/evolution/${itm}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
