@@ -43,7 +43,6 @@ function gainPk(){
         App.game.party.gainPokemonById(id, true);
     document.querySelectorAll(`:scope #pkdx_${id.toString().replace('.','_')} img`)[1].src = getPokeballImgSrc(id, lpkm);
     filterPkdx();
-    loadEventHandlers();
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -55,7 +54,6 @@ function gainPkrs(){
     lpkm.pokerus = (lpkm.pokerus < 2) ? 2 : 3;
     document.querySelectorAll(`:scope #pkdx_${id.toString().replace('.','_')} img`)[2].src = getPokerusImgSrc(id, lpkm);
     filterPkdx();
-    loadEventHandlers();
 }
 
 function gainCurrency() {
@@ -195,7 +193,7 @@ function loadPkdx(){
     }
     pkdxBody.innerHTML = toAdd;
     filterPkdx();
-    loadEventHandlers();
+    pkdxLoadEventHandlers();
 }
 
 function loadQuestLines() {
@@ -232,7 +230,6 @@ function loadQuestLines() {
 
     qlBody.innerHTML = toAdd;
     filterQuestLine();
-    loadEventHandlers();
 }
 
 function loadEventHandlers() {
@@ -309,17 +306,20 @@ function loadEventHandlers() {
     document.getElementById("pkdxRegionFilter").addEventListener("change", filterPkdx);
     document.getElementById("pkdxShinyFilter").addEventListener("change", filterPkdx);
     document.getElementById("pkdxPKRSFilter").addEventListener("change", filterPkdx);
-    for (const pokemon of pokemonList) {
-        let pkElement = document.getElementById("pkdx_" + pokemon.id.toString().replace('.','_'));
-        if (pkElement){
-            pkElement.children[4].addEventListener("click", gainPk);
-            pkElement.children[5].addEventListener("click", gainPkrs);
-        }
-    }
     
     // questline
     document.getElementById("questlines").children[1].addEventListener("click", loadQuestLines);
     document.getElementById("questLineFilter").addEventListener("change", filterQuestLine);
+}
+
+function pkdxLoadEventHandlers() {
+	for (const pokemon of pokemonList) {
+		let pkElement = document.getElementById("pkdx_" + pokemon.id.toString().replace('.','_'));
+		if (pkElement){
+			pkElement.children[4].addEventListener("click", gainPk);
+			pkElement.children[5].addEventListener("click", gainPkrs);
+		}
+	}
 }
 
 function initSaveEditor() {
