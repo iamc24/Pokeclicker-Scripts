@@ -233,7 +233,6 @@ function loadQuestLines() {
 }
 
 function loadEventHandlers() {
-
     // currency
     for (let i = 0; i < Object.keys(GameConstants.Currency).filter(isNaN).length; i++) {
         document.getElementById("currency_" + i).addEventListener("click", gainCurrency);
@@ -253,13 +252,6 @@ function loadEventHandlers() {
         });
     }
 
-    // berries
-    for (let i = 0; i < Object.keys(BerryType).filter(isNaN).length - 1; i++) {
-        document.getElementById("berries_" + i).addEventListener("click", function () {
-            App.game.farming.gainBerry(i, parseInt(document.getElementById('inputAddBerries').value || 0), true);
-        });
-    }
-
     // evolution items
     for (let i = 0; i < Object.keys(GameConstants.StoneType).filter(isNaN).length - 1; i++) {
         document.getElementById("evolutionitems_" + i).addEventListener("click", function () {
@@ -267,10 +259,10 @@ function loadEventHandlers() {
         });
     }
 
-    // heldItems
+    // held items
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         document.getElementById("attackhelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().attack.items[idk].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().attack.items[idx].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
     HeldItem.getSortedHeldItems().typeRestricted.items.forEach((itm, idx) => {
@@ -294,10 +286,31 @@ function loadEventHandlers() {
         });
     });
 
+    // farm items
+    // mulch
+    for (let i = 0; i < Object.keys(MulchType).filter(isNaN).length - 1; i++) {
+        document.getElementById("mulch_" + i).addEventListener("click", function () {
+            GameHelper.incrementObservable(App.game.farming.mulchList[i], parseInt(document.getElementById('inputAddFarmItems').value || 0));
+        });
+    }
+    // shovels
+    document.getElementById("berry_shovel").addEventListener("click", function () {
+        GameHelper.incrementObservable(App.game.farming.shovelAmt, parseInt(document.getElementById('inputAddFarmItems').value || 0));
+    });
+    document.getElementById("mulch_shovel").addEventListener("click", function () {
+        GameHelper.incrementObservable(App.game.farming.mulchShovelAmt, parseInt(document.getElementById('inputAddFarmItems').value || 0));
+    });
+    // berries
+    for (let i = 0; i < Object.keys(BerryType).filter(isNaN).length - 1; i++) {
+        document.getElementById("berries_" + i).addEventListener("click", function () {
+            App.game.farming.gainBerry(i, parseInt(document.getElementById('inputAddFarmItems').value || 0), true);
+        });
+    }
+
     // underground items
     for (let i = 0; i < Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem').filter(isNaN).length; i++) {
         document.getElementById("undergrounditem_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddUndergroundItems').value || 0), true);
+            player.gainItem(this.getAttribute("item"), parseInt(document.getElementById('inputAddUndergroundItems').value || 0), true);
         });
     }
 
@@ -305,19 +318,19 @@ function loadEventHandlers() {
     // vitamins
     for (let i = 0; i < Object.keys(GameConstants.VitaminType).filter(isNaN).length; i++) {
         document.getElementById("vitamins_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("vitamin")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+            player.gainItem(this.getAttribute("vitamin"), parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
         });
     }
     // consumables
     for (let i = 0; i < Object.keys(GameConstants.ConsumableType).filter(isNaN).length; i++) {
         document.getElementById("consumableitems_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+            player.gainItem(this.getAttribute("item"), parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
         });
     }
     // battle items
     for (let i = 0; i < Object.keys(GameConstants.BattleItemType).filter(isNaN).length; i++) {
         document.getElementById("battleitems_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+            player.gainItem(this.getAttribute("item"), parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
         });
     }
     // dream orbs
@@ -329,7 +342,7 @@ function loadEventHandlers() {
     // eggs
     for (let i = 0; i < Object.keys(GameConstants.EggItemType).filter(isNaN).length; i++) {
         document.getElementById("eggs_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("egg")].name, parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
+            player.gainItem(this.getAttribute("egg"), parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
         });
     }
     // wishing piece
@@ -388,9 +401,9 @@ function initSaveEditor() {
                         <li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#currency">Currency</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#gems">Gems</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#pokeballs">Pokeballs</a></li>
-                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#berries">Berries</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#evolutionItems">Evolution Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#heldItems">Held Items</a></li>
+                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#farmItems">Farm Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#undergroundItems">Underground Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#miscItems">Miscellaneous Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#pokedex">Pokedex</a></li>
@@ -409,10 +422,6 @@ function initSaveEditor() {
                             <p>On click add pokeballs (input)</p>
                             <input id="inputAddPokeballs" class="form-control" type="number" placeholder="1000" value="1000" min="0">
                         </div>
-                        <div id="berries" class="tab-pane p-3">
-                            <p>On click add berries (input)</p>
-                            <input id="inputAddBerries" class="form-control" type="number" placeholder="1000" value="1000" min="0">
-                        </div>
                         <div id="evolutionItems" class="tab-pane p-3">
                             <p>On click add evolution items (input)</p>
                             <input id="inputAddEvolutionItems" class="form-control" type="number" placeholder="100" value="100" min="0">
@@ -420,6 +429,10 @@ function initSaveEditor() {
                         <div id="heldItems" class="tab-pane p-3">
                             <p>On click add held items (input)</p>
                             <input id="inputAddHeldItems" class="form-control" type="number" placeholder="100" value="100" min="0">
+                        </div>
+                        <div id="farmItems" class="tab-pane p-3">
+                            <p>On click add farm items (input)</p>
+                            <input id="inputAddFarmItems" class="form-control" type="number" placeholder="1000" value="1000" min="0">
                         </div>
                         <div id="undergroundItems" class="tab-pane p-3">
                             <p>On click add underground items (input)</p>
@@ -547,17 +560,6 @@ function initSaveEditor() {
         `;
     }
 
-    // berries
-    for (let i = 0; i < Object.keys(BerryType).filter(isNaN).length - 1; i++) {
-        const itm = BerryType[i];
-        modalBody.querySelector('#berries').innerHTML += `
-            <div id="berries_${i}" class="btn btn-primary col-2 item-bag-item">
-                <img title="${itm}" src="assets/images/items/berry/${itm}.png" height="25px">
-                <div>${itm}</div>
-            </div>
-        `;
-    }
-
     // evolution items
     for (let i = 0; i < Object.keys(GameConstants.StoneType).filter(isNaN).length - 1; i++) {
         const itm = GameConstants.StoneType[i];
@@ -565,14 +567,14 @@ function initSaveEditor() {
         return char.toUpperCase();
       });
         modalBody.querySelector('#evolutionItems').innerHTML += `
-            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item">
+            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
                 <img title="${itmPretty}" src="assets/images/items/evolution/${itm}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
         `;
     }
 
-    // heldItems
+    // held items
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
@@ -618,6 +620,42 @@ function initSaveEditor() {
             </div>
         `;
     });
+
+    // farm items
+    // mulch
+    for (let i = 0; i < Object.keys(MulchType).filter(isNaN).length - 1; i++) {
+        const itm = MulchType[i];
+        const itmPretty = itm.replaceAll('_', ' ');
+        modalBody.querySelector('#farmItems').innerHTML += `
+            <div id="mulch_${i}" class="btn btn-primary col-2 item-bag-item" mulch="${itm}">
+                <img title="${itmPretty}" src="assets/images/items/farm/${itm}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    }
+    // shovels
+    modalBody.querySelector('#farmItems').innerHTML += `
+        <div id="berry_shovel" class="btn btn-primary col-2 item-bag-item">
+            <img title="Berry Shovel" src="assets/images/items/farm/Berry_Shovel.png" height="25px">
+            <div>Berry Shovel</div>
+        </div>
+    `;
+    modalBody.querySelector('#farmItems').innerHTML += `
+        <div id="mulch_shovel" class="btn btn-primary col-2 item-bag-item">
+            <img title="Mulch Shovel" src="assets/images/items/farm/Mulch_Shovel.png" height="25px">
+            <div>Mulch Shovel</div>
+        </div>
+    `;
+    // berries
+    for (let i = 0; i < Object.keys(BerryType).filter(isNaN).length - 1; i++) {
+        const itm = BerryType[i];
+        modalBody.querySelector('#farmItems').innerHTML += `
+            <div id="berries_${i}" class="btn btn-primary col-2 item-bag-item">
+                <img title="${itm} Berry" src="assets/images/items/berry/${itm}.png" height="25px">
+                <div>${itm} Berry</div>
+            </div>
+        `;
+    }
 
     // underground items
     for (let i = 0; i < Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem').filter(isNaN).length; i++) {
