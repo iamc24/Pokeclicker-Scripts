@@ -260,37 +260,37 @@ function loadEventHandlers() {
         });
     }
 
-    // evolutionitems
+    // evolution items
     for (let i = 0; i < Object.keys(GameConstants.StoneType).filter(isNaN).length - 1; i++) {
         document.getElementById("evolutionitems_" + i).addEventListener("click", function () {
-            player.gainItem(ItemList[this.getAttribute("item")].name, parseInt(document.getElementById('inputAddEvolutionItems').value || 0), true);
+            player.gainItem(this.getAttribute("item"), parseInt(document.getElementById('inputAddEvolutionItems').value || 0), true);
         });
     }
 
     // heldItems
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         document.getElementById("attackhelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().attack.items[parseInt(this.getAttribute("item"))].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().attack.items[idk].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
     HeldItem.getSortedHeldItems().typeRestricted.items.forEach((itm, idx) => {
         document.getElementById("typehelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().typeRestricted.items[parseInt(this.getAttribute("item"))].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().typeRestricted.items[idx].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
     HeldItem.getSortedHeldItems().ev.items.forEach((itm, idx) => {
         document.getElementById("evhelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().ev.items[parseInt(this.getAttribute("item"))].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().ev.items[idx].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
     HeldItem.getSortedHeldItems().exp.items.forEach((itm, idx) => {
         document.getElementById("exphelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().exp.items[parseInt(this.getAttribute("item"))].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().exp.items[idx].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
     HeldItem.getSortedHeldItems().other.items.forEach((itm, idx) => {
         document.getElementById("otherhelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().other.items[parseInt(this.getAttribute("item"))].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().other.items[idx].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
 
@@ -350,13 +350,13 @@ function loadEventHandlers() {
 }
 
 function pkdxLoadEventHandlers() {
-	for (const pokemon of pokemonList) {
-		let pkElement = document.getElementById("pkdx_" + pokemon.id.toString().replace('.','_'));
-		if (pkElement){
-			pkElement.children[4].addEventListener("click", gainPk);
-			pkElement.children[5].addEventListener("click", gainPkrs);
-		}
-	}
+    for (const pokemon of pokemonList) {
+        let pkElement = document.getElementById("pkdx_" + pokemon.id.toString().replace('.','_'));
+        if (pkElement){
+            pkElement.children[4].addEventListener("click", gainPk);
+            pkElement.children[5].addEventListener("click", gainPkrs);
+        }
+    }
 }
 
 function initSaveEditor() {
@@ -389,7 +389,7 @@ function initSaveEditor() {
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#gems">Gems</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#pokeballs">Pokeballs</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#berries">Berries</a></li>
-                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#evolutionitems">Evolution Items</a></li>
+                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#evolutionItems">Evolution Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#heldItems">Held Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#undergroundItems">Underground Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#miscItems">Miscellaneous Items</a></li>
@@ -413,7 +413,7 @@ function initSaveEditor() {
                             <p>On click add berries (input)</p>
                             <input id="inputAddBerries" class="form-control" type="number" placeholder="1000" value="1000" min="0">
                         </div>
-                        <div id="evolutionitems" class="tab-pane p-3">
+                        <div id="evolutionItems" class="tab-pane p-3">
                             <p>On click add evolution items (input)</p>
                             <input id="inputAddEvolutionItems" class="form-control" type="number" placeholder="100" value="100" min="0">
                         </div>
@@ -558,12 +558,14 @@ function initSaveEditor() {
         `;
     }
 
-    // evolutionitems
+    // evolution items
     for (let i = 0; i < Object.keys(GameConstants.StoneType).filter(isNaN).length - 1; i++) {
         const itm = GameConstants.StoneType[i];
-        const itmPretty = itm.replaceAll('_', ' ');
-        modalBody.querySelector('#evolutionitems').innerHTML += `
-            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
+        const itmPretty = itm.replaceAll('_', ' ').replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+      });
+        modalBody.querySelector('#evolutionItems').innerHTML += `
+            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/evolution/${itm}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -574,7 +576,7 @@ function initSaveEditor() {
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
-            <div id="attackhelditems_${idx}" class="btn btn-primary col-2 item-bag-item" item="${idx}">
+            <div id="attackhelditems_${idx}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -583,7 +585,7 @@ function initSaveEditor() {
     HeldItem.getSortedHeldItems().typeRestricted.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
-            <div id="typehelditems_${idx}" class="btn btn-primary col-2 item-bag-item" item="${idx}">
+            <div id="typehelditems_${idx}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -592,7 +594,7 @@ function initSaveEditor() {
     HeldItem.getSortedHeldItems().ev.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
-            <div id="evhelditems_${idx}" class="btn btn-primary col-2 item-bag-item" item="${idx}">
+            <div id="evhelditems_${idx}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -601,7 +603,7 @@ function initSaveEditor() {
     HeldItem.getSortedHeldItems().exp.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
-            <div id="exphelditems_${idx}" class="btn btn-primary col-2 item-bag-item" item="${idx}">
+            <div id="exphelditems_${idx}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -610,7 +612,7 @@ function initSaveEditor() {
     HeldItem.getSortedHeldItems().other.items.forEach((itm, idx) => {
         const itmPretty = itm.name.replaceAll('_', ' ');
         modalBody.querySelector('#heldItems').innerHTML += `
-            <div id="otherhelditems_${idx}" class="btn btn-primary col-2 item-bag-item" item="${idx}">
+            <div id="otherhelditems_${idx}" class="btn btn-primary col-2 item-bag-item">
                 <img title="${itmPretty}" src="assets/images/items/heldItems/${itm.name}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
