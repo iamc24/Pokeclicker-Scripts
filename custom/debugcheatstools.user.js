@@ -350,6 +350,13 @@ function loadEventHandlers() {
         player.gainItem("Wishing_Piece", parseInt(document.getElementById('inputAddMiscItems').value || 0), true);
     });
 
+    // mega stones
+    for(let i = 0; i < Object.keys(GameConstants.MegaStoneType).filter(isNaN).length; i == 4 ? i +=2 : i++) {
+        document.getElementById("mega_stone_" + i).addEventListener("click", function () {
+            player.itemList[this.getAttribute("stone")](1);
+        });
+    }
+
     // pokedex
     document.getElementById("pokedex").children[1].addEventListener("click", loadPkdx);
     document.getElementById("pkdxNameFilter").addEventListener("input", filterPkdx);
@@ -406,6 +413,7 @@ function initSaveEditor() {
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#farmItems">Farm Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#undergroundItems">Underground Items</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#miscItems">Miscellaneous Items</a></li>
+                        <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#megaStones">Mega Stones</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#pokedex">Pokedex</a></li>
                         <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#questlines">Quests</a></li>
                     </ul>
@@ -441,6 +449,9 @@ function initSaveEditor() {
                         <div id="miscItems" class="tab-pane p-3">
                             <p>On click add held items (input)</p>
                             <input id="inputAddMiscItems" class="form-control" type="number" placeholder="100" value="100" min="0">
+                        </div>
+                        <div id="megaStones" class="tab-pane p-3">
+                            <p>On click add mega stone</p>
                         </div>
                         <div id="pokedex" class="tab-pane p-3">
                             <p><b>You can break your game, please backup!</b></br><i>Do not complete pokedex from another region if you are not in the region you will not be able to go to the next region!</i></p>
@@ -564,10 +575,10 @@ function initSaveEditor() {
     for (let i = 0; i < Object.keys(GameConstants.StoneType).filter(isNaN).length - 1; i++) {
         const itm = GameConstants.StoneType[i];
         const itmPretty = itm.replaceAll('_', ' ').replace(/\b\w/g, function(char) {
-        return char.toUpperCase();
-      });
+            return char.toUpperCase();
+        });
         modalBody.querySelector('#evolutionItems').innerHTML += `
-            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item">
+            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
                 <img title="${itmPretty}" src="assets/images/items/evolution/${itm}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
@@ -661,9 +672,9 @@ function initSaveEditor() {
     for (let i = 0; i < Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem').filter(isNaN).length; i++) {
         const itm = Object.values(ItemList).filter(itm => itm.constructor.name === 'TreasureItem')[i].name;
         const itmPretty = itm.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, function(char) {
-        return char.toUpperCase();
-      });
-      const path = itmPretty.slice(-6) == "Fossil" || itmPretty == "Old Amber" ? 'breeding/'+itmPretty : 'items/underground/'+itmPretty;
+            return char.toUpperCase();
+        });
+        const path = itmPretty.slice(-6) == "Fossil" || itmPretty == "Old Amber" ? 'breeding/'+itmPretty : 'items/underground/'+itmPretty;
         modalBody.querySelector('#undergroundItems').innerHTML += `
             <div id="undergrounditem_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
                 <img title="${itmPretty}" src="assets/images/${path}.png" height="25px">
@@ -698,8 +709,8 @@ function initSaveEditor() {
     for (let i = 0; i < Object.keys(GameConstants.BattleItemType).filter(isNaN).length; i++) {
         const itm = Object.keys(GameConstants.BattleItemType)[i];
         const itmPretty = i > 1 ? itm.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, function(char) {
-        return char.toUpperCase();
-      }) : itm;
+            return char.toUpperCase();
+        }) : itm;
         modalBody.querySelector('#miscItems').innerHTML += `
             <div id="battleitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
                 <img title="${itmPretty}" src="assets/images/items/battleItem/${itm}.png" height="25px">
@@ -721,8 +732,8 @@ function initSaveEditor() {
     for (let i = 0; i < Object.keys(GameConstants.EggItemType).filter(isNaN).length; i++) {
         const itm = GameConstants.EggItemType[i];
         const itmPretty = itm.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, function(char) {
-        return char.toUpperCase();
-      });
+            return char.toUpperCase();
+        });
         modalBody.querySelector('#miscItems').innerHTML += `
             <div id="eggs_${i}" class="btn btn-primary col-2 item-bag-item" egg="${itm}">
                 <img title="${itmPretty}" src="assets/images/items/egg/${itm}.png" height="25px">
@@ -737,6 +748,18 @@ function initSaveEditor() {
             <div>Wishing Piece</div>
         </div>
     `;
+
+    // mega stones
+    for(let i = 0; i < Object.keys(GameConstants.MegaStoneType).filter(isNaN).length; i == 4 ? i +=2 : i++) {
+        const itm = GameConstants.MegaStoneType[i];
+        const itmPretty = itm.replaceAll('_', ' ');
+        modalBody.querySelector('#megaStones').innerHTML += `
+            <div id="mega_stone_${i}" class="btn btn-primary col-2 item-bag-item" stone="${itm}">
+                <img title="${itmPretty}" src="assets/images/megaStone/${itm}.png" height="25px">
+                <div>${itmPretty}</div>
+            </div>
+        `;
+    }
 
     // pokedex
     const pkdxRegFilt = modalBody.querySelector('#pkdxRegionFilter');
