@@ -276,7 +276,7 @@ function loadEventHandlers() {
     // held items
     HeldItem.getSortedHeldItems().attack.items.forEach((itm, idx) => {
         document.getElementById("attackhelditems_" + idx).addEventListener("click", function () {
-            HeldItem.getSortedHeldItems().attack.items[idk].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
+            HeldItem.getSortedHeldItems().attack.items[idx].gain(parseInt(document.getElementById('inputAddHeldItems').value || 0));
         });
     });
     HeldItem.getSortedHeldItems().typeRestricted.items.forEach((itm, idx) => {
