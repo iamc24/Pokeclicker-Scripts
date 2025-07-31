@@ -520,10 +520,10 @@ function initSaveEditor() {
     for (let i = 0; i < Object.keys(GameConstants.StoneType).filter(isNaN).length - 1; i++) {
         const itm = GameConstants.StoneType[i];
         const itmPretty = itm.replaceAll('_', ' ').replace(/\b\w/g, function(char) {
-        return char.toUpperCase();
-      });
+            return char.toUpperCase();
+        });
         modalBody.querySelector('#evolutionItems').innerHTML += `
-            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item">
+            <div id="evolutionitems_${i}" class="btn btn-primary col-2 item-bag-item" item="${itm}">
                 <img title="${itmPretty}" src="assets/images/items/evolution/${itm}.png" height="25px">
                 <div>${itmPretty}</div>
             </div>
